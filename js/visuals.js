@@ -71,10 +71,10 @@
   /* ---------- 部位 → 体の領域 ---------- */
   const REGION_MAP = {
     // 牛
-    'beef-neck': 'neck', 'beef-shoulder': 'shoulder', 'beef-chuck-roll': 'shoulder',
+    'beef-neck': 'neck', 'beef-shoulder': 'shoulder', 'beef-chuck-roll': 'chuckLoin',
     'beef-rib': 'rib', 'beef-sirloin': 'loin', 'beef-fillet': 'tenderloin',
     'beef-chateaubriand': 'tenderloin', 'beef-brisket': 'brisket', 'beef-shortplate': 'belly',
-    'beef-tomosankaku': 'rump', 'beef-uchimomo': 'round', 'beef-shintama': 'round',
+    'beef-tomosankaku': 'round', 'beef-uchimomo': 'round', 'beef-shintama': 'round',
     'beef-ranichi': 'rump', 'beef-sotomomo': 'round', 'beef-shank': 'shank',
     // ホルモン
     'horumon-harami': 'offal', 'horumon-sagari': 'offal', 'horumon-tan': 'head',
@@ -82,24 +82,16 @@
     'horumon-hachinosu': 'offal', 'horumon-senmai': 'offal', 'horumon-giara': 'offal',
     'horumon-marucho': 'offal', 'horumon-shimacho': 'offal',
     // 豚
-    'pork-kata': 'shoulder', 'pork-kata-loin': 'shoulder', 'pork-loin': 'loin',
+    'pork-kata': 'shoulder', 'pork-kata-loin': 'chuckLoin', 'pork-loin': 'loin',
     'pork-fillet': 'tenderloin', 'pork-belly': 'belly', 'pork-momo': 'round',
     'pork-toro': 'neck', 'pork-spareribs': 'belly',
     // 鶏
     'chicken-mune': 'breast', 'chicken-momo': 'thigh', 'chicken-sasami': 'tender',
-    'chicken-tebasaki': 'wing', 'chicken-tebamoto': 'wing', 'chicken-seseri': 'neck',
+    'chicken-tebasaki': 'wingTip', 'chicken-tebamoto': 'wingBase', 'chicken-seseri': 'neck',
     'chicken-sunagimo': 'offal', 'chicken-bonjiri': 'tail',
     // その他
     'other-lamb-chop': 'loin', 'other-lamb-shoulder': 'shoulder', 'other-horse-akami': 'round',
     'other-horse-tategami': 'neck', 'other-venison': 'loin', 'other-boar': 'belly',
-  };
-
-  const REGION_LABEL = {
-    head: '頭部（舌など）', neck: '首', shoulder: '肩（カタ）', rib: '背中前方（リブ）',
-    loin: '背中（ロース／サーロイン）', tenderloin: '背骨の内側（ヒレ）', rump: '腰〜尻（ランプ）',
-    round: 'もも（後脚）', brisket: '肩バラ（胸）', belly: 'バラ（腹）', shank: 'すね（脚）',
-    offal: '内臓（ホルモン）',
-    breast: '胸（ムネ）', tender: '胸の内側（ササミ）', thigh: 'もも', wing: '手羽（翼）', tail: '尾',
   };
 
   /* ---------- 部位 → ハイライト座標（画像に対する％。x,y=中心 / w=幅％） ----------
@@ -110,23 +102,25 @@
     head:       { x: 15, y: 40, w: 15 },
     neck:       { x: 29, y: 37, w: 15 },
     shoulder:   { x: 39, y: 46, w: 17 },
+    chuckLoin:  { x: 40, y: 29, w: 15 },
     rib:        { x: 51, y: 38, w: 15 },
     loin:       { x: 61, y: 34, w: 16 },
     tenderloin: { x: 60, y: 49, w: 13 },
     rump:       { x: 73, y: 37, w: 15 },
-    round:      { x: 82, y: 55, w: 17 },
-    brisket:    { x: 33, y: 62, w: 15 },
-    belly:      { x: 54, y: 64, w: 18 },
-    shank:      { x: 31, y: 82, w: 11 },
+    round:      { x: 79, y: 51, w: 16 },
+    brisket:    { x: 33, y: 55, w: 13 },
+    belly:      { x: 54, y: 55, w: 15 },
+    shank:      { x: 36, y: 72, w: 10 },
     offal:      { x: 53, y: 52, w: 20 },
   };
   const BIRD_COORD = {
     breast: { x: 41, y: 56, w: 19 },
     tender: { x: 42, y: 62, w: 14 },
     thigh:  { x: 57, y: 66, w: 17 },
-    wing:   { x: 60, y: 46, w: 21 },
+    wingTip: { x: 57, y: 47, w: 16 },
+    wingBase: { x: 44, y: 44, w: 13 },
     neck:   { x: 30, y: 34, w: 15 },
-    tail:   { x: 80, y: 35, w: 17 },
+    tail:   { x: 68, y: 51, w: 12 },
     offal:  { x: 50, y: 58, w: 17 },
   };
 
@@ -143,7 +137,20 @@
 
   function animalFor(cat) { return cat === 'chicken' ? 'bird' : 'quad'; }
   function regionOf(d) { return REGION_MAP[d.id] || (animalFor(d.cat) === 'bird' ? 'breast' : 'loin'); }
-  function regionLabelOf(d) { return REGION_LABEL[regionOf(d)] || ''; }
+  function regionLabelOf(d) { return d.location; }
+
+  // この外観イラストでは内部の各器官を描き分けられない。
+  // 一律に腹部へ丸印を付けると位置を誤認するため、該当部位の印は省略する。
+  const INTERNAL_PARTS = new Set([
+    'beef-fillet', 'beef-chateaubriand', 'pork-fillet',
+    'chicken-sasami', 'chicken-sunagimo',
+  ]);
+  function omitMarker(d) { return d.cat === 'horumon' || INTERNAL_PARTS.has(d.id); }
+  function diagramNoteOf(d) {
+    return omitMarker(d)
+      ? '模式図：内部の部位のため丸印は省略しています。位置は文章で確認してください。'
+      : '模式図：赤丸はおおよその位置で、部位の境界や正確な切り分けを示すものではありません。';
+  }
 
   function imageFor(d) {
     if (d.cat === 'chicken') return 'chicken';
@@ -155,6 +162,15 @@
     const map = animalFor(d.cat) === 'bird' ? BIRD_COORD : QUAD_COORD;
     return map[regionOf(d)];
   }
+
+  const MULTI_COORD = {
+    'beef-shank': [{ x: 36, y: 72, w: 10 }, { x: 80, y: 72, w: 10 }],
+    'other-horse-akami': [{ x: 73, y: 52, w: 15 }],
+    'other-venison': [{ x: 56, y: 38, w: 14 }, { x: 71, y: 52, w: 14 }],
+    'other-boar': [{ x: 57, y: 37, w: 14 }, { x: 56, y: 55, w: 14 }],
+    'other-horse-tategami': [{ x: 31, y: 21, w: 13 }],
+    'other-lamb-chop': [{ x: 54, y: 37, w: 16 }],
+  };
 
   function marker(c) {
     if (!c) return '';
@@ -168,8 +184,8 @@
     const img = imageFor(d);
     return '<div class="anat-fig' + (opt.compact ? ' compact' : '') + '">' +
       '<img class="anat-photo" src="image/opt/' + img + '.jpg" ' +
-      'alt="' + (IMG_ALT[img] || '') + 'の部位図" loading="lazy" draggable="false">' +
-      marker(coordOf(d)) +
+      'alt="' + (IMG_ALT[img] || '') + 'の模式図（部位の境界は概略）" loading="lazy" draggable="false">' +
+      (omitMarker(d) ? '' : (MULTI_COORD[d.id] || [coordOf(d)]).map(marker).join('')) +
       '</div>';
   }
 
@@ -177,4 +193,5 @@
   window.CAT_ICON = CAT_ICON;
   window.anatomy = anatomy;
   window.regionLabelOf = regionLabelOf;
+  window.diagramNoteOf = diagramNoteOf;
 })();

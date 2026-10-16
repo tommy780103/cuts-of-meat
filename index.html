@@ -4,8 +4,9 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1">
   <meta name="theme-color" content="#C0392B">
-  <meta name="description" content="牛・豚・鶏・ホルモン・その他の肉の部位を、位置・食感・調理法・別名・栄養でわかりやすく調べられる図鑑アプリ。">
+  <meta name="description" content="牛・豚・鶏・牛ホルモン・その他の肉の部位を、位置・食感・調理法・別名・栄養でわかりやすく調べられる図鑑アプリ。">
   <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <title>肉の部位図鑑</title>
   <meta name="apple-mobile-web-app-title" content="肉の部位図鑑">
@@ -15,14 +16,14 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Noto+Serif+JP:wght@600;700&display=swap">
-  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/style.css?v=20261017-audit3">
 </head>
 <body>
 
   <header class="app-header">
     <div class="app-title">
       <svg class="ic logo-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 13C5 8 9 5 14 5c5 0 6.5 4 6 8-1 4-5 6-8 6-5 0-7-2-7-6Z"/><circle cx="10.5" cy="13" r="2.2"/></svg>
-      <span>肉の部位図鑑 <small>牛・豚・鶏・ホルモン・その他</small></span>
+      <span>肉の部位図鑑 <small>牛・豚・鶏・牛ホルモン・その他</small></span>
     </div>
 
     <div class="search-wrap">
@@ -37,11 +38,11 @@
       </button>
       <button class="mode-btn" data-mode="yakiniku" role="tab">
         <span class="m-top"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3c1.5 3-1.5 4.2-1.5 7A1.8 1.8 0 0012 11c0-2 1.5-2.4 1-4 2 1.8 3 3.6 3 6a4 4 0 11-8 0c0-3.2 2.5-4.6 4-10Z"/></svg>焼肉</span>
-        <span class="m-sub">呼び名・希少</span>
+        <span class="m-sub">呼び名を確認</span>
       </button>
       <button class="mode-btn" data-mode="nutrition" role="tab">
         <span class="m-top"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="4" y1="8" x2="4" y2="16"/><line x1="7" y1="6" x2="7" y2="18"/><line x1="17" y1="6" x2="17" y2="18"/><line x1="20" y1="8" x2="20" y2="16"/><line x1="7" y1="12" x2="17" y2="12"/></svg>栄養</span>
-        <span class="m-sub">カロリー比較</span>
+        <span class="m-sub">成分値と条件</span>
       </button>
     </div>
   </header>
@@ -53,11 +54,10 @@
   <main class="grid" id="grid"></main>
 
   <div class="foot">
-    <b>ご注意：</b>栄養値は100gあたりの<b>目安</b>です（文部科学省 食品成分DB 八訂 増補2023年を基準）。
-    牛肉は和牛／輸入／等級でカロリー・脂質が大きく変動します。正確な値は
-    食品成分データベースでご確認ください。<br>
-    主な出典：農林水産省「お肉丸わかり図鑑」／日本食肉格付協会(JMGA)／
-    食品流通構造改善促進機構(OFSI)海外名称対応表／CMPC／日本ハム。
+    <p><b>情報の見方：</b>図は位置の目安を示す模式図です。内部の部位など、正確に描き分けられない丸印は省略しています。呼び名や海外のカット区分は地域・店により異なります。</p>
+    <p><b>栄養値：</b>文部科学省 食品成分データベースの可食部100gの値です。肉種、脂身・皮の有無、生・ゆでなど、各項目の<b>収載条件</b>を確認してください。条件が違う値は単純に比較できません。近い区分やまとめた区分の値を使う場合は「代表値」と明示しています。根拠を確認できない数値は掲載していません。</p>
+    <p><b>調理：</b>生や加熱不足の肉・内臓には食中毒のリスクがあります。加熱用の肉は中心まで十分に加熱してください。<a href="https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/0000049964.html" target="_blank" rel="noopener noreferrer">厚生労働省の案内</a></p>
+    <p>最終照合：2026年10月17日。各項目の詳細に、確認に用いた資料と食品番号へのリンクを掲載しています。</p>
   </div>
 
   <!-- 詳細シート -->
@@ -69,8 +69,9 @@
     </div>
   </div>
 
-  <script src="js/data.js"></script>
-  <script src="js/visuals.js"></script>
-  <script src="js/app.js"></script>
+  <script src="js/nutrition.js?v=20261017-audit3"></script>
+  <script src="js/data.js?v=20261017-audit3"></script>
+  <script src="js/visuals.js?v=20261017-audit3"></script>
+  <script src="js/app.js?v=20261017-audit3"></script>
 </body>
 </html>
