@@ -2,7 +2,7 @@
  * 肉の部位図鑑 — ビジュアル（SVGアイコン ＆ 部位図イラスト＋位置ハイライト）
  *   window.ICON(name)        … UIライン アイコン
  *   window.CAT_ICON(cat)     … カテゴリ(動物)アイコン
- *   window.anatomy(cut, opt) … 動物イラスト＋部位の位置ハイライト（image/opt/*.jpg）
+ *   window.anatomy(cut, opt) … 動物イラスト＋部位の位置ハイライト（image/illustrations/*.webp）
  *   window.regionLabelOf(cut)
  * ========================================================================= */
 (function () {
@@ -95,32 +95,40 @@
   };
 
   /* ---------- 部位 → ハイライト座標（画像に対する％。x,y=中心 / w=幅％） ----------
-   * 四足動物(牛/豚/羊/馬/鹿/猪)は左向き側面で構図共通 → 共通座標
-   * 鳥(鶏)は専用座標
+   * 2026-10-17版の3:2キャンバス全体に対する位置。
+   * 牛・豚・鶏は各イラスト専用、その他の動物は項目別に指定する。
    * ------------------------------------------------------------------------- */
   const QUAD_COORD = {
     head:       { x: 15, y: 40, w: 15 },
-    neck:       { x: 29, y: 37, w: 15 },
-    shoulder:   { x: 39, y: 46, w: 17 },
-    chuckLoin:  { x: 40, y: 29, w: 15 },
-    rib:        { x: 51, y: 38, w: 15 },
-    loin:       { x: 61, y: 34, w: 16 },
+    neck:       { x: 24, y: 34, w: 14 },
+    shoulder:   { x: 33, y: 47, w: 16 },
+    chuckLoin:  { x: 35, y: 26, w: 16 },
+    rib:        { x: 51, y: 28, w: 16 },
+    loin:       { x: 66, y: 29, w: 17 },
     tenderloin: { x: 60, y: 49, w: 13 },
-    rump:       { x: 73, y: 37, w: 15 },
-    round:      { x: 79, y: 51, w: 16 },
-    brisket:    { x: 33, y: 55, w: 13 },
-    belly:      { x: 54, y: 55, w: 15 },
-    shank:      { x: 36, y: 72, w: 10 },
+    rump:       { x: 81, y: 32, w: 15 },
+    round:      { x: 82, y: 50, w: 17 },
+    brisket:    { x: 30, y: 55, w: 14 },
+    belly:      { x: 58, y: 56, w: 18 },
+    shank:      { x: 34, y: 68, w: 11 },
     offal:      { x: 53, y: 52, w: 20 },
   };
+  const PIG_COORD = {
+    neck: { x: 24, y: 42, w: 15 },
+    shoulder: { x: 35, y: 47, w: 16 },
+    chuckLoin: { x: 38, y: 29, w: 16 },
+    loin: { x: 63, y: 31, w: 18 },
+    belly: { x: 57, y: 57, w: 18 },
+    round: { x: 84, y: 48, w: 17 },
+  };
   const BIRD_COORD = {
-    breast: { x: 41, y: 56, w: 19 },
+    breast: { x: 32, y: 54, w: 17 },
     tender: { x: 42, y: 62, w: 14 },
-    thigh:  { x: 57, y: 66, w: 17 },
-    wingTip: { x: 57, y: 47, w: 16 },
-    wingBase: { x: 44, y: 44, w: 13 },
-    neck:   { x: 30, y: 34, w: 15 },
-    tail:   { x: 68, y: 51, w: 12 },
+    thigh:  { x: 58, y: 70, w: 15 },
+    wingTip: { x: 62, y: 54, w: 15 },
+    wingBase: { x: 41, y: 44, w: 13 },
+    neck:   { x: 27, y: 29, w: 11 },
+    tail:   { x: 76, y: 45, w: 11 },
     offal:  { x: 50, y: 58, w: 17 },
   };
 
@@ -159,17 +167,18 @@
     return 'beef-cattle'; // 牛・ホルモン
   }
   function coordOf(d) {
-    const map = animalFor(d.cat) === 'bird' ? BIRD_COORD : QUAD_COORD;
+    const map = d.cat === 'chicken' ? BIRD_COORD : d.cat === 'pork' ? PIG_COORD : QUAD_COORD;
     return map[regionOf(d)];
   }
 
   const MULTI_COORD = {
-    'beef-shank': [{ x: 36, y: 72, w: 10 }, { x: 80, y: 72, w: 10 }],
-    'other-horse-akami': [{ x: 73, y: 52, w: 15 }],
-    'other-venison': [{ x: 56, y: 38, w: 14 }, { x: 71, y: 52, w: 14 }],
-    'other-boar': [{ x: 57, y: 37, w: 14 }, { x: 56, y: 55, w: 14 }],
-    'other-horse-tategami': [{ x: 31, y: 21, w: 13 }],
-    'other-lamb-chop': [{ x: 54, y: 37, w: 16 }],
+    'beef-shank': [{ x: 34, y: 68, w: 11 }, { x: 82, y: 67, w: 11 }],
+    'other-horse-akami': [{ x: 81, y: 47, w: 16 }],
+    'other-venison': [{ x: 59, y: 43, w: 15 }, { x: 77, y: 57, w: 15 }],
+    'other-boar': [{ x: 64, y: 28, w: 16 }, { x: 59, y: 57, w: 18 }],
+    'other-horse-tategami': [{ x: 25, y: 19, w: 12 }],
+    'other-lamb-chop': [{ x: 58, y: 31, w: 19 }],
+    'other-lamb-shoulder': [{ x: 34, y: 44, w: 17 }],
   };
 
   function marker(c) {
@@ -183,7 +192,7 @@
     opt = opt || {};
     const img = imageFor(d);
     return '<div class="anat-fig' + (opt.compact ? ' compact' : '') + '">' +
-      '<img class="anat-photo" src="image/opt/' + img + '.jpg" ' +
+      '<img class="anat-photo" src="image/illustrations/' + img + '.webp" width="900" height="600" ' +
       'alt="' + (IMG_ALT[img] || '') + 'の模式図（部位の境界は概略）" loading="lazy" draggable="false">' +
       (omitMarker(d) ? '' : (MULTI_COORD[d.id] || [coordOf(d)]).map(marker).join('')) +
       '</div>';
