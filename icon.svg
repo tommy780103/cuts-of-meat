@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <title>肉の部位図鑑</title>
+  <defs>
+    <linearGradient id="background" x2="0" y2="1">
+      <stop stop-color="#D5302A"/>
+      <stop offset="1" stop-color="#A82421"/>
+    </linearGradient>
+  </defs>
+  <path fill="url(#background)" d="M0 0h512v512H0z"/>
+  <g transform="translate(25 16) scale(18)" stroke="#FFF4E7" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+    <path fill="#EC6558" d="M5 13C5 8 9 5 14 5c5 0 6.5 4 6 8-1 4-5 6-8 6-5 0-7-2-7-6Z"/>
+    <circle cx="10.5" cy="13" r="2.2" fill="#FFF4E7" stroke="none"/>
+    <path d="m15 8 1.8 1.5M16 12l1.7 1.3M14 15l1.3 1" stroke-width="1.2"/>
+  </g>
+</svg>

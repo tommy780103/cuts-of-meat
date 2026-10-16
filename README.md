@@ -9,9 +9,7 @@
 
 プロジェクトフォルダで以下を実行：
 
-```bash
-cd "/Users/tommy/Documents/デスクトップ避難場所/2_code/tool/20260628_肉の部位"
-```
+プロジェクト直下で実行します。
 
 ```bash
 python3 -m http.server 8765
@@ -41,6 +39,20 @@ _docs/changelog.md … 開発メモ・出典方針・今後の課題
 ```
 
 ビルド不要・依存ライブラリなしの静的サイトです。
+
+## ホーム画面アイコン
+
+[公開ページ](https://tommy780103.github.io/cuts-of-meat/) をiPhoneのSafariで開き、「共有」→「ホーム画面に追加」で赤い背景のステーキ画像を確認できます。以前追加した文字アイコンが残る場合は、そのホーム画面アイコンを削除して追加し直してください。
+
+既存のアプリ内ロゴに合わせたSVGを元に、不透明の180px PNG（iPhone）と48px PNG（favicon）、192px・512px PNG（予備）を用意しています。PNGの角丸処理はOSに任せます。SVGの描画にはSharpを使用しました。アプリの実行時に画像生成ライブラリは不要です。
+
+```text
+icon.svg
+apple-touch-icon.png
+favicon.png
+icon-192.png
+icon-512.png
+```
 
 ## 出典
 農林水産省「お肉丸わかり図鑑」／日本食肉格付協会(JMGA)／食品流通構造改善促進機構(OFSI)海外名称対応表／CMPC／日本ハム／文部科学省 食品成分DB（八訂 増補2023年）。
